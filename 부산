@@ -177,5 +177,6 @@ int main(void) {
 		j++;
 	}
 printf("123);
+printf("확인용");
 	return 0;
 }
