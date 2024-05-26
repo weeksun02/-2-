@@ -1,0 +1,180 @@
+#include<stdio.h>
+#include<windows.h>
+#include<stdlib.h>
+#include <time.h>
+
+#define LEN_MIN 15
+#define LEN_MAX 50
+#define PROB_MIN 10
+#define PROB_MAX 90
+
+int main(void) {
+	printf("나 ");
+	Sleep(1000);
+	printf("잡");
+	Sleep(1000);
+	printf("아");
+	Sleep(1000);
+	printf("봐");
+	Sleep(1000);
+	printf("라");
+	Sleep(1000);
+	printf("~!\n");
+	Sleep(1000);
+	printf("=====================\n");
+	printf("= 부산헹 GAME START =\n");
+	printf("=====================\n");
+	Sleep(2000);
+	int length;
+	printf("train length(15~50) >>  ");
+	scanf_s("%d", &length);
+	if (LEN_MIN > length) {
+		printf("\n잘못입력하였으므로 프로그램을 종료합니다");
+		exit(0);
+	}
+	else if (LEN_MAX < length) {
+		printf("\n잘못입력하였으므로 프로그램을 종료합니다");
+		exit(0);
+	}
+	int cprob;
+	int zprob;
+	printf("percentile probability citizen'cp'(10~90) >> ");
+	scanf_s("%d", &cprob);
+	printf("percentile probability zombie'zp'(10~90) >> ");
+	scanf_s("%d", &zprob);
+	if (PROB_MIN > cprob && PROB_MIN > zprob) {
+		printf("\n잘못입력하였으므로 프로그램을 종료합니다");
+		exit(0);
+	}
+	else if (PROB_MAX < cprob && PROB_MAX < zprob) {
+		printf("\n잘못입력하였으므로 프로그램을 종료합니다");
+		exit(0);
+	}
+
+	srand((unsigned int)time(NULL));
+
+	int z = length - 3;
+	int c = length - 6;
+	int m = length - 2;
+	int j = 0;
+	int space = c - 1;
+	int sspace = z - c - 1;
+	int ssspace = 0;
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//열차 첫번째 줄 출력
+	for (int i = 1; i <= length; i++) {
+		printf("#");
+	}
+	printf("\n");
+	//열차 두번째 줄 출력
+	printf("#");
+
+	for (int j = 1; j <= space; j++) {
+		printf(" ");
+	}
+
+	printf("c");
+	
+	for (int i = 1; i <= sspace; i++) {
+		printf(" ");
+	}
+	printf("z");
+	printf("m");
+	printf("#");
+	Sleep(1);
+	printf("\n");
+	//열차 세번쨰 줄 출력
+	for (int i = 1; i <= length; i++) {
+		printf("#");
+	}
+	printf("\n");
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//시민이동 시작~!
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//시민 움직일떄
+	j = 0;
+	while (1) {
+		//열차 시민 이동(1번째 줄 출력)
+		printf("\n");
+		for (int j = 1; j <= length; j++) {
+			printf("#");
+		}
+		printf("\n");
+		//열차 이동 획률 출력(2번째 줄 출력)
+		int percent = rand() % 100 + 1;
+		if (percent < (100 - cprob)) {
+			c -= 1;
+		}
+		
+		
+		if (percent < zprob) {
+			if (j % 2 == 0) {
+				z -= 1;
+				ssspace += 1;
+			}
+		}
+		
+		///두번째줄 출력
+		printf("#");
+		int space = c - 1;
+		for (int j = 1;j<=space;j++) {
+			printf(" ");
+		}
+		printf("c");
+		int sspace = z - c - 1;
+		for (int i = 1; i <= sspace; i++) {
+			printf(" ");
+		}
+		printf("z");
+		
+		for (int i = 1; i <= ssspace; i++) {
+			printf(" ");
+		}
+		printf("m");
+		printf("#");
+		printf("\n");
+		for (int i = 1; i <= length; i++) {
+			printf("#");
+		}
+		printf("\n");
+
+		//시민상태출력
+		if (percent < (100 - cprob)) {
+			printf("citizen : stay %d -> %d\n", c + 1, c);
+		}
+		else {
+			printf("citizen : stay %d\n", c);
+		}
+		//좀비상태출력-움직였을때
+		if (percent < zprob) {
+			if (j % 2 == 0) {
+				printf("zombie : stay %d -> %d\n", z + 1, z);
+			}
+			else {
+				printf("zombie : stay %d (Can not move)\n", z);
+			}
+		}
+			//좀비상태출력-제자리일때
+		else {
+			if (j % 2 == 0) {
+				printf("zombie : stay %d -> %d\n", z + 1, z);
+			}
+			else {
+				printf("zombie : stay %d (Can not move)\n", z);
+			}
+		}
+		Sleep(4000);
+		//시민이 도착하거나 좀비가 시민과 만나면 게임오버
+		if (space == 0) {
+			printf("\nSUCCESS!\ncitizen(s) escaped to the next train\n");
+			break;
+		}
+		if (sspace == 0) {
+			printf("\nGAME OVER!\nCitizen(s) has(have) been attacked by a zombi\n");
+			break;
+		}
+		j++;
+	}
+	return 0;
+}
